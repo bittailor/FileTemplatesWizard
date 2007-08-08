@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<filetemplates>
+	<generator name="class">
+		<file>
+			<name>${string.class}.hpp</name>
+			<template>class.hpp.ftl</template>
+		</file>
+		<file>
+			<name>${string.class}.cpp</name>
+			<template>class.cpp.ftl</template>
+		</file>
+	</generator>
+	<generator name="class1">
+		<file>
+			<name>${string.class}.hpp</name>
+			<template>class.hpp.ftl</template>
+		</file>
+		<file>
+			<name>${string.class}.cpp</name>
+			<template>class.cpp.ftl</template>
+		</file>
+	</generator>
+	<generator name="class2">
+		<file>
+			<name>${string.class}.hpp</name>
+			<template>class.hpp.ftl</template>
+		</file>
+		<file>
+			<name>${string.class}.cpp</name>
+			<template>class.cpp.ftl</template>
+		</file>
+	</generator>
+	<generator name="class3">
+		<file>
+			<name>${string.class}.hpp</name>
+			<template>class.hpp.ftl</template>
+		</file>
+		<file>
+			<name>${string.class}.cpp</name>
+			<template>class.cpp.ftl</template>
+		</file>
+	</generator>
+</filetemplates>

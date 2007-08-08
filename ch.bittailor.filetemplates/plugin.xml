@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            name="File Templates Wizards"
+            id="ch.bittailor.filetemplates">
+      </category>
+      <wizard
+            name="File Templates Editor"
+            icon="icons/sample.gif"
+            category="ch.bittailor.filetemplates"
+            class="ch.bittailor.filetemplates.wizards.FileTemplatesWizard"
+            id="ch.bittailor.filetemplates.wizards.FileTemplatesWizard">
+      </wizard>
+   </extension>
+
+</plugin>
