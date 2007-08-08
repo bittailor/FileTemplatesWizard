@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -33,13 +34,13 @@ import freemarker.template.TemplateException;
 public class Generator {
 	
 	private Configuration fConfiguration;
-  private String fTemplateDirectory;
+  private Class<?> fClassForTemplateLoading;
   private SimpleHash fRoot;
   private List<String[]> fOutputs;
   private SimpleHash fGlobal;
   
-	public Generator(String templateDirectory){
-	  fTemplateDirectory = templateDirectory;
+	public Generator(Class<?> templateDirectory){
+	  fClassForTemplateLoading = templateDirectory;
 	  fRoot = new SimpleHash();
 	  createGlobals();
 	  fRoot.put("env", System.getenv());
@@ -56,7 +57,15 @@ public class Generator {
   }
 	
 	public List<IFile> generate(IContainer container, IProgressMonitor monitor, Element element) throws CoreException {
-    generateAllFiles(element);
+    
+	  IProject project = container.getProject();
+	  if(project==null){
+	    fGlobal.put("project", new SimpleScalar("?"));
+	  } else {
+	    fGlobal.put("project", project.getName());
+	  }
+	  
+	  generateAllFiles(element);
     List<IFile> files = new LinkedList<IFile>();
     for (String[] output : fOutputs) {
       IFile file = container.getFile(new Path(output[0]));
@@ -88,13 +97,14 @@ public class Generator {
       output = generateTemplate(template);
       fOutputs.add(new String[]{filename,output});
     } catch (IOException e) {
-      throw new CoreException(new Status(IStatus.ERROR,Activator.PLUGIN_ID,"io problem while processing "+template,e));
+      e.printStackTrace();
+      throw new CoreException(new Status(IStatus.ERROR,Activator.PLUGIN_ID,"io problem while processing "+template +
+          ":\n"+e.getMessage(),e));
     } catch (TemplateException e) {
-      throw new CoreException(new Status(IStatus.ERROR,Activator.PLUGIN_ID,"template problem while processing "+template,e));
-    } catch (Throwable throwable){
-      throwable.printStackTrace();
-      throw new CoreException(new Status(IStatus.ERROR,Activator.PLUGIN_ID,"unknown problem while processing "+template,throwable));
-    }
+      e.printStackTrace();
+      throw new CoreException(new Status(IStatus.ERROR,Activator.PLUGIN_ID,"template problem while processing "+template+
+          ":\n"+e.getMessage(),e));
+    } 
 	}
 	
 	public String generateTemplate(String templateName) throws IOException, TemplateException{	
@@ -119,7 +129,7 @@ public class Generator {
   private Configuration getConfiguration() throws IOException {
     if (fConfiguration==null){
       fConfiguration = new Configuration();
-      fConfiguration.setDirectoryForTemplateLoading(new File(fTemplateDirectory));
+      fConfiguration.setClassForTemplateLoading(fClassForTemplateLoading, "templates/");
       fConfiguration.setObjectWrapper(new DefaultObjectWrapper());
     }
     return fConfiguration;

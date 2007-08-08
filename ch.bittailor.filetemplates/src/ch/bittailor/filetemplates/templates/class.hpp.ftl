@@ -1,3 +1,4 @@
+// project : ${global.project}
 // file : ${global.filename}
 // date : ${global.date?string("dd.MM.yy")}
 // date : ${global.user}

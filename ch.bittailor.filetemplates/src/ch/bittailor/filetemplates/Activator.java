@@ -37,24 +37,8 @@ public class Activator extends AbstractUIPlugin {
 		fPlugin = this;
 	}
 
-	public String getTemplateStorage(){
-	  BufferedReader templatesXml = new BufferedReader( new InputStreamReader(this.getClass().getResourceAsStream("filetemplates.xml")));
-	  try {
-	    String line = null;
-      while((line=templatesXml.readLine())!=null){
-        System.out.println(line);
-      }
-      templatesXml.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-    } finally{
-      
-    }
-	  
-	  
-	  
-	  
-	  return "/Users/gekko/Development/workspace/ch.bittailor.filetemplates/test/templates";
+	public Class<?> getTemplateStorage(){	  
+	  return this.getClass();
 	}
 	
 	/*

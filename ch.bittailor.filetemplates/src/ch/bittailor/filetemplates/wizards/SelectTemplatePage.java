@@ -2,6 +2,7 @@ package ch.bittailor.filetemplates.wizards;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -56,13 +57,14 @@ public class SelectTemplatePage extends WizardPage implements SelectionListener 
 	  Element root = null;
 	  try {
       builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-      File file = new File(Activator.getDefault().getTemplateStorage(),"filetemplates.xml");
-      if(!file.exists()){
-        System.err.println(file.toString()+" does not exist!");
+      InputStream xml = Activator.getDefault().getTemplateStorage().getResourceAsStream("templates/filetemplates.xml");
+      
+      if(xml==null){
+        System.err.println("could not load templates/filetemplates.xml");
       }
       else
       {
-        Document doc = builder.parse(file);
+        Document doc = builder.parse(xml);
         root = doc.getDocumentElement();
       }
     } catch (ParserConfigurationException e1) {
