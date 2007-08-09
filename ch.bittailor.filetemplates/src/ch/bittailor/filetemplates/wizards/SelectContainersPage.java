@@ -21,26 +21,15 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 
-/**
- * The "New" wizard page allows setting the container for the new file as well
- * as the file name. The page will only accept file name without the extension
- * OR with the extension that matches the expected one (test).
- */
-
 public class SelectContainersPage extends WizardPage {
 	private Text containerText;
 
 	private ISelection selection;
 	
-	/**
-	 * Constructor for SampleNewWizardPage.
-	 * 
-	 * @param pageName
-	 */
 	public SelectContainersPage(ISelection selection) {
 		super("wizardPage");
-		setTitle("Multi-page Editor File");
-		setDescription("This wizard creates a new file with *.test extension that can be opened by a multi-page editor.");
+		setTitle("File Template Generator");
+		setDescription("This wizard creates files with the selected template generator.");
 		this.selection = selection;
 	}
 
@@ -48,9 +37,7 @@ public class SelectContainersPage extends WizardPage {
 	 * @see IDialogPage#createControl(Composite)
 	 */
 	public void createControl(Composite parent) {
-	  
-	  
-	  
+	   
 	  Composite container = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout();
 		container.setLayout(layout);
@@ -84,10 +71,6 @@ public class SelectContainersPage extends WizardPage {
 		setControl(container);
 	}
 
-	/**
-	 * Tests if the current workbench selection is a suitable container to use.
-	 */
-
 	private void initialize() {
 		if (selection != null && selection.isEmpty() == false
 				&& selection instanceof IStructuredSelection) {
@@ -106,11 +89,6 @@ public class SelectContainersPage extends WizardPage {
 		}
 	}
 
-	/**
-	 * Uses the standard container selection dialog to choose the new value for
-	 * the container field.
-	 */
-
 	private void handleBrowse() {
 		ContainerSelectionDialog dialog = new ContainerSelectionDialog(
 				getShell(), ResourcesPlugin.getWorkspace().getRoot(), false,
@@ -122,10 +100,6 @@ public class SelectContainersPage extends WizardPage {
 			}
 		}
 	}
-
-	/**
-	 * Ensures that both text fields are set.
-	 */
 
 	private void dialogChanged() {
 		IResource container = ResourcesPlugin.getWorkspace().getRoot().findMember(new Path(getContainerName()));

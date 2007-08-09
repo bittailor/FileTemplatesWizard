@@ -1,15 +1,11 @@
 package ch.bittailor.filetemplates.wizards;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.jface.dialogs.IDialogPage;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -22,30 +18,19 @@ import org.eclipse.swt.widgets.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import ch.bittailor.filetemplates.Activator;
-
-/**
- * The "New" wizard page allows setting the container for the new file as well
- * as the file name. The page will only accept file name without the extension
- * OR with the extension that matches the expected one (test).
- */
 
 public class SelectTemplatePage extends WizardPage implements SelectionListener {
 
 	
+  private static final String FILETEMPLATES_XML = "filetemplates.xml";
   private List fList;
   private NodeList fGenerators;
 
-	/**
-	 * Constructor for SampleNewWizardPage.
-	 * 
-	 * @param pageName
-	 */
-	public SelectTemplatePage(ISelection selection) {
-		super("wizardPage");
-		setTitle("Multi-page Editor File");
+	public SelectTemplatePage() {
+		super("Select Generator");
+		setTitle("File Template Generator");
 		setDescription("This wizard creates files with the selected template generator.");
 	}
 
@@ -53,30 +38,21 @@ public class SelectTemplatePage extends WizardPage implements SelectionListener 
 	 * @see IDialogPage#createControl(Composite)
 	 */
 	public void createControl(Composite parent) {
-	  DocumentBuilder builder;
-	  Element root = null;
 	  try {
-      builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-      InputStream xml = Activator.getDefault().getTemplateStorage().getResourceAsStream("templates/filetemplates.xml");
-      
-      if(xml==null){
-        System.err.println("could not load templates/filetemplates.xml");
-      }
-      else
-      {
-        Document doc = builder.parse(xml);
-        root = doc.getDocumentElement();
-      }
-    } catch (ParserConfigurationException e1) {
-      // TODO Auto-generated catch block
-      e1.printStackTrace();
-    } catch (SAXException e) {
-      // TODO Auto-generated catch block
+	    Activator activator = Activator.getDefault();
+	    String xmlLocation = activator.getTempaltePathPrefix()+FILETEMPLATES_XML;
+	    InputStream xml = activator.getTemplateStorage().getResourceAsStream(xmlLocation);    
+	    if(xml==null){
+	      throw new IOException("Could not open resource stream to "+FILETEMPLATES_XML);
+	    }
+      Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(xml);
+      Element root = document.getDocumentElement();
+      fGenerators = root.getElementsByTagName("generator"); 
+    } catch (Exception e) {
       e.printStackTrace();
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      throw new Error("problem loading templates definition file "+FILETEMPLATES_XML,e);
     }
+    
     
 	  Composite container = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout();
@@ -85,12 +61,10 @@ public class SelectTemplatePage extends WizardPage implements SelectionListener 
 		layout.verticalSpacing = 9;
 		
 		Label label = new Label(container, SWT.NULL);
-    label.setText("&Templates:");
+    label.setText("&Generators:");
 
-		
 		fList = new List (container, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
-    fGenerators = root.getElementsByTagName("generator");
-    for (int i = 0; i < fGenerators.getLength(); i++) {
+		for (int i = 0; i < fGenerators.getLength(); i++) {
       Element generator = (Element)fGenerators.item(i);
       fList.add(generator.getAttribute("name"));
     }
@@ -107,7 +81,7 @@ public class SelectTemplatePage extends WizardPage implements SelectionListener 
 	  if(fList.getSelection().length>0){
 	    updateStatus(null);
 	  }else{
-	    updateStatus("no template selected");
+	    updateStatus("no generator selected");
 	  }
 	}
 

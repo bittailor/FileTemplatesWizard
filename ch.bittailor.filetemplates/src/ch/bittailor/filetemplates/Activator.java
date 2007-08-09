@@ -1,9 +1,5 @@
 package ch.bittailor.filetemplates;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -20,9 +16,7 @@ public class Activator extends AbstractUIPlugin {
 	// The shared instance
 	private static Activator fPlugin;
 
-  private BundleContext fContext;
-	
-	/**
+  /**
 	 * The constructor
 	 */
 	public Activator() {
@@ -37,19 +31,23 @@ public class Activator extends AbstractUIPlugin {
 		fPlugin = this;
 	}
 
-	public Class<?> getTemplateStorage(){	  
-	  return this.getClass();
-	}
-	
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
 		fPlugin = null;
-		fContext = context;
-    super.stop(context);
+		super.stop(context);
 	}
+	
+	public Class<?> getTemplateStorage(){    
+    return this.getClass();
+  }
+  
+	public String getTempaltePathPrefix(){
+	  return "templates/";
+	}
+	
 
 	/**
 	 * Returns the shared instance

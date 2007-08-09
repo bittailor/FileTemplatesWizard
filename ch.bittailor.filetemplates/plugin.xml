@@ -9,8 +9,8 @@
             id="ch.bittailor.filetemplates">
       </category>
       <wizard
-            name="File Templates Editor"
-            icon="icons/sample.gif"
+            name="File(s) from Template Generator"
+            icon="icons/template_gen.png"
             category="ch.bittailor.filetemplates"
             class="ch.bittailor.filetemplates.wizards.FileTemplatesWizard"
             id="ch.bittailor.filetemplates.wizards.FileTemplatesWizard">

@@ -1,7 +1,6 @@
 package ch.bittailor.filetemplates.freemarker;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -34,24 +33,29 @@ import freemarker.template.TemplateException;
 public class Generator {
 	
 	private Configuration fConfiguration;
-  private Class<?> fClassForTemplateLoading;
-  private SimpleHash fRoot;
-  private List<String[]> fOutputs;
+  private SimpleHash fDataModel;
   private SimpleHash fGlobal;
+  private List<String[]> fOutputs;
   
-	public Generator(Class<?> templateDirectory){
-	  fClassForTemplateLoading = templateDirectory;
-	  fRoot = new SimpleHash();
-	  createGlobals();
-	  fRoot.put("env", System.getenv());
-    fRoot.put("string", new StringHashModel());
-    fRoot.put("boolean", new BooleanHashModel());
+	public Generator(Class<?> classForTemplateLoading, String tempaltePathPrefix){
+	  
+	  fConfiguration = new Configuration();
+    fConfiguration.setClassForTemplateLoading(classForTemplateLoading, tempaltePathPrefix);
+    fConfiguration.setObjectWrapper(new DefaultObjectWrapper());
+	  
+    fDataModel = new SimpleHash();
+	  fGlobal = new SimpleHash();
+    fDataModel.put("global", fGlobal);
+	  fDataModel.put("env", System.getenv());
+    fDataModel.put("string", new StringHashModel());
+    fDataModel.put("boolean", new BooleanHashModel());
+    
+    fillGlobals();
+    
     fOutputs = new LinkedList<String[]>();
 	}
 
-  private void createGlobals() {
-    fGlobal = new SimpleHash();
-    fRoot.put("global", fGlobal);
+  private void fillGlobals() {
     fGlobal.put("date", new SimpleDate(new Date(),TemplateDateModel.DATETIME));
     fGlobal.put("user", new SimpleScalar(System.getProperty("user.name", "?")));
   }
@@ -98,17 +102,17 @@ public class Generator {
       fOutputs.add(new String[]{filename,output});
     } catch (IOException e) {
       e.printStackTrace();
-      throw new CoreException(new Status(IStatus.ERROR,Activator.PLUGIN_ID,"io problem while processing "+template +
+      throw new CoreException(new Status(IStatus.ERROR,Activator.PLUGIN_ID,IStatus.OK,"io problem while processing "+template +
           ":\n"+e.getMessage(),e));
     } catch (TemplateException e) {
       e.printStackTrace();
-      throw new CoreException(new Status(IStatus.ERROR,Activator.PLUGIN_ID,"template problem while processing "+template+
+      throw new CoreException(new Status(IStatus.ERROR,Activator.PLUGIN_ID,IStatus.OK,"template problem while processing "+template+
           ":\n"+e.getMessage(),e));
     } 
 	}
 	
 	public String generateTemplate(String templateName) throws IOException, TemplateException{	
-		Template template = getConfiguration().getTemplate(templateName);  
+		Template template = fConfiguration.getTemplate(templateName);  
 		return process(template);
 	}
 	
@@ -120,19 +124,10 @@ public class Generator {
 	
 	public String process(Template template) throws TemplateException, IOException {
     StringWriter writer = new StringWriter();
-    template.process(fRoot, writer);
+    template.process(fDataModel, writer);
     return writer.toString();
   }
 	
 	
-	
-  private Configuration getConfiguration() throws IOException {
-    if (fConfiguration==null){
-      fConfiguration = new Configuration();
-      fConfiguration.setClassForTemplateLoading(fClassForTemplateLoading, "templates/");
-      fConfiguration.setObjectWrapper(new DefaultObjectWrapper());
-    }
-    return fConfiguration;
-  }
 	
 }
