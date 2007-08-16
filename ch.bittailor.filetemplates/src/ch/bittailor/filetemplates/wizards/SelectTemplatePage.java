@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import ch.bittailor.filetemplates.Activator;
@@ -27,6 +28,7 @@ public class SelectTemplatePage extends WizardPage implements SelectionListener 
   private static final String FILETEMPLATES_XML = "filetemplates.xml";
   private List fList;
   private NodeList fGenerators;
+  private Label fInfo;
 
 	public SelectTemplatePage() {
 		super("Select Generator");
@@ -61,7 +63,7 @@ public class SelectTemplatePage extends WizardPage implements SelectionListener 
 		layout.verticalSpacing = 9;
 		
 		Label label = new Label(container, SWT.NULL);
-    label.setText("&Generators:");
+    label.setText("Select a generator");
 
 		fList = new List (container, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
 		for (int i = 0; i < fGenerators.getLength(); i++) {
@@ -73,6 +75,8 @@ public class SelectTemplatePage extends WizardPage implements SelectionListener 
 		fList.setLayoutData(gd);
 		fList.addSelectionListener(this);
     
+		fInfo = new Label(container, SWT.WRAP);
+		fInfo.setText(" \n ");
 		dialogChanged();
 		setControl(container);
 	}
@@ -80,6 +84,13 @@ public class SelectTemplatePage extends WizardPage implements SelectionListener 
 	private void dialogChanged() {
 	  if(fList.getSelection().length>0){
 	    updateStatus(null);
+	    Node description = getGenerator().getElementsByTagName("description").item(0);
+	    if (description!=null) {
+	      fInfo.setText(((Element)description).getTextContent());        
+      }else{
+        fInfo.setText("No description");
+      }
+	    fList.getParent().layout(true);
 	  }else{
 	    updateStatus("no generator selected");
 	  }

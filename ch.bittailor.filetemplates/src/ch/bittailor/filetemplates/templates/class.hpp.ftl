@@ -18,4 +18,4 @@ class ${string.class}
    
 };
 
-#endif // INC__${global.filename?upper_case}
+#endif // INC__${global.filename?replace(".","__")?upper_case}
