@@ -9,8 +9,7 @@
 		<file>
 			<name>&lt;#if boolean.withNamespace &gt;${string.namespace?replace('::','_')}_&lt;#elseif boolean.withPrefix &gt;${string.prefix}_&lt;/#if&gt;${string.class}.cpp</name>
 			<template>class.cpp.ftl</template>
-		</file>
-		
+		</file>		
 	</generator>
 	<generator name="C++ Source File">
 		<description>Generator für ein C++ Source File</description>

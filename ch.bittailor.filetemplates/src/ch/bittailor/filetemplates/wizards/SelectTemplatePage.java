@@ -1,5 +1,6 @@
 package ch.bittailor.filetemplates.wizards;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -25,7 +26,6 @@ import ch.bittailor.filetemplates.Activator;
 public class SelectTemplatePage extends WizardPage implements SelectionListener {
 
 	
-  private static final String FILETEMPLATES_XML = "filetemplates.xml";
   private List fList;
   private NodeList fGenerators;
   private Label fInfo;
@@ -42,17 +42,17 @@ public class SelectTemplatePage extends WizardPage implements SelectionListener 
 	public void createControl(Composite parent) {
 	  try {
 	    Activator activator = Activator.getDefault();
-	    String xmlLocation = activator.getTempaltePathPrefix()+FILETEMPLATES_XML;
-	    InputStream xml = activator.getTemplateStorage().getResourceAsStream(xmlLocation);    
+	    String xmlLocation = activator.getTemplateLocation()+"/"+Activator.FILETEMPLATES_XML;
+	    InputStream xml = new FileInputStream(xmlLocation);    
 	    if(xml==null){
-	      throw new IOException("Could not open resource stream to "+FILETEMPLATES_XML);
+	      throw new IOException("Could not open resource stream to "+Activator.FILETEMPLATES_XML);
 	    }
       Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(xml);
       Element root = document.getDocumentElement();
       fGenerators = root.getElementsByTagName("generator"); 
     } catch (Exception e) {
       e.printStackTrace();
-      throw new Error("problem loading templates definition file "+FILETEMPLATES_XML,e);
+      throw new Error("problem loading templates definition file "+Activator.FILETEMPLATES_XML,e);
     }
     
     

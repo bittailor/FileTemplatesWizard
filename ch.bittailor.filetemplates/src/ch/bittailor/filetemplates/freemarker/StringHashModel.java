@@ -13,6 +13,7 @@ public class StringHashModel extends CacheModel<String> implements TemplateHashM
     return new SimpleScalar(getCached(key)) ;
   }
 
+  @Override
   protected String ask(String key) {
     return ServiceProvider.instance().getAskSerice().askForAString(key);
   }

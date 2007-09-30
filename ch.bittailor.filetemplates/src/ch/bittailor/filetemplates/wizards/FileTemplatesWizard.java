@@ -1,5 +1,6 @@
 package ch.bittailor.filetemplates.wizards;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
@@ -28,9 +29,10 @@ import org.w3c.dom.Element;
 
 import ch.bittailor.filetemplates.Activator;
 import ch.bittailor.filetemplates.freemarker.Generator;
+import freemarker.template.TemplateException;
 
 public class FileTemplatesWizard extends Wizard implements INewWizard {
-  private ISelection selection;
+  private ISelection fSelection;
   private SelectTemplatePage fPageOne;
   private SelectContainersPage fPageTwo;
 
@@ -39,13 +41,15 @@ public class FileTemplatesWizard extends Wizard implements INewWizard {
     setNeedsProgressMonitor(true);
   }
 
+  @Override
   public void addPages() {
     fPageOne = new SelectTemplatePage();
     addPage(fPageOne);
-    fPageTwo = new SelectContainersPage(selection);
+    fPageTwo = new SelectContainersPage(fSelection);
     addPage(fPageTwo);
   }
 
+  @Override
   public boolean performFinish() {
     final Element generator = fPageOne.getGenerator();
     final String containerName = fPageTwo.getContainerName();
@@ -83,22 +87,36 @@ public class FileTemplatesWizard extends Wizard implements INewWizard {
     }
     IContainer container = (IContainer) resource;
 
-    Generator generator = new Generator(Activator.getDefault().getTemplateStorage(),Activator.getDefault().getTempaltePathPrefix());
-    final List<IFile> files = generator.generate(container, monitor, fileName);
-
-    monitor.worked(1);
-    monitor.setTaskName("opening file(s) for editing...");
-    getShell().getDisplay().asyncExec(new Runnable() {
-      public void run() {
-        IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        for (IFile file : files) {
-          try {
-            IDE.openEditor(page, file, true);
-          } catch (PartInitException e) {
-          }
-        }		
-      }
-    });
+    
+    Generator generator;
+    try {
+      generator = new Generator(Activator.getDefault().getTemplateLocation());
+    
+      final List<IFile> files = generator.generate(container, monitor, fileName);
+      
+      monitor.worked(1);
+      monitor.setTaskName("opening file(s) for editing...");
+      getShell().getDisplay().asyncExec(new Runnable() {
+        public void run() {
+          IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+          for (IFile file : files) {
+            try {
+              IDE.openEditor(page, file, true);
+            } catch (PartInitException e) {
+            }
+          }		
+        }
+      });
+    } catch (IOException e) {
+      e.printStackTrace();
+      throw new CoreException(new Status(IStatus.ERROR,Activator.PLUGIN_ID,IStatus.OK,"io problem while processing templates:\n"
+          +e.getMessage(),e));
+    } catch (TemplateException e) {
+      e.printStackTrace();
+      throw new CoreException(new Status(IStatus.ERROR,Activator.PLUGIN_ID,IStatus.OK,"template problem while processing templates:\n"
+          +e.getFTLInstructionStack()+"\n"
+          +e.getMessage(),e));
+    }
     monitor.worked(1);
   }
 
@@ -109,7 +127,7 @@ public class FileTemplatesWizard extends Wizard implements INewWizard {
   }
 
   public void init(IWorkbench workbench, IStructuredSelection selection) {
-    this.selection = selection;
+    fSelection = selection;
   }
 
 }

@@ -1,8 +1,15 @@
 package ch.bittailor.filetemplates;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+
+import ch.bittailor.filetemplates.preferences.PreferenceConstants;
 
 
 /**
@@ -16,6 +23,12 @@ public class Activator extends AbstractUIPlugin {
 	// The shared instance
 	private static Activator fPlugin;
 
+  public static final String FILETEMPLATES_XML = "filetemplates.xml";
+  public static final String CLASS_HPP = "class.hpp.ftl";
+  public static final String CLASS_CPP = "class.cpp.ftl";
+
+  
+  
   /**
 	 * The constructor
 	 */
@@ -26,23 +39,49 @@ public class Activator extends AbstractUIPlugin {
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
-	public void start(BundleContext context) throws Exception {
+	@Override
+  public void start(BundleContext context) throws Exception {
 		super.start(context);
 		fPlugin = this;
+		System.out.println(getPreferenceStore().getString(PreferenceConstants.P_TEMPLATES_LOCATION));
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
-	public void stop(BundleContext context) throws Exception {
+	@Override
+  public void stop(BundleContext context) throws Exception {
 		fPlugin = null;
 		super.stop(context);
 	}
 	
-	public Class<?> getTemplateStorage(){    
-    return this.getClass();
+	public String getTemplateLocation() throws IOException{   
+	  String location = getPreferenceStore().getString(PreferenceConstants.P_TEMPLATES_LOCATION);
+	  File directory = new File(location);
+	  if(!directory.exists()) {
+	    directory.mkdirs();
+	  }
+	  File xml = new File(directory,FILETEMPLATES_XML);
+	  if (!xml.exists()){
+	    copy(getClass().getResourceAsStream("templates/"+FILETEMPLATES_XML),xml);
+	    copy(getClass().getResourceAsStream("templates/"+CLASS_HPP),new File(directory,CLASS_HPP));
+	    copy(getClass().getResourceAsStream("templates/"+CLASS_CPP),new File(directory,CLASS_CPP));
+	  }
+	  return location;
   }
+	
+	private static void copy(InputStream source, File destination) throws IOException{  
+	  if(source == null){
+	    throw new IOException("Resource stream for "+destination.getName()+" is null");
+	  }
+	  FileOutputStream out = new FileOutputStream(destination);
+	  byte[] buffer = new byte[100];	
+	  int len = 0;
+	  while((len=source.read(buffer))!=-1 ){
+	    out.write(buffer, 0, len);
+	  }
+	}
   
 	public String getTempaltePathPrefix(){
 	  return "templates/";

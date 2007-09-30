@@ -12,6 +12,7 @@ public class BooleanHashModel extends CacheModel<Boolean> implements TemplateHas
     return new SimpleBoolean(getCached(key));
   }
 
+  @Override
   protected Boolean ask(String key) {
     return ServiceProvider.instance().getAskSerice().askForABoolean(key);
   }

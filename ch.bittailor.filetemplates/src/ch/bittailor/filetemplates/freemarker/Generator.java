@@ -1,6 +1,7 @@
 package ch.bittailor.filetemplates.freemarker;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -14,13 +15,10 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import ch.bittailor.filetemplates.Activator;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.SimpleDate;
@@ -37,10 +35,10 @@ public class Generator {
   private SimpleHash fGlobal;
   private List<String[]> fOutputs;
   
-	public Generator(Class<?> classForTemplateLoading, String tempaltePathPrefix){
+	public Generator(String templateLoaction) throws IOException{
 	  
 	  fConfiguration = new Configuration();
-    fConfiguration.setClassForTemplateLoading(classForTemplateLoading, tempaltePathPrefix);
+	  fConfiguration.setDirectoryForTemplateLoading(new File(templateLoaction));
     fConfiguration.setObjectWrapper(new DefaultObjectWrapper());
 	  
     fDataModel = new SimpleHash();
@@ -60,7 +58,7 @@ public class Generator {
     fGlobal.put("user", new SimpleScalar(System.getProperty("user.name", "?")));
   }
 	
-	public List<IFile> generate(IContainer container, IProgressMonitor monitor, Element element) throws CoreException {
+	public List<IFile> generate(IContainer container, IProgressMonitor monitor, Element element) throws IOException, TemplateException, CoreException  {
     
 	  IProject project = container.getProject();
 	  if(project==null){
@@ -84,23 +82,24 @@ public class Generator {
 	  return files;
 	}
 	
-	public void generateAllFiles(Element element) throws CoreException{
+	public void generateAllFiles(Element element) throws IOException, TemplateException{
 	  NodeList files = element.getElementsByTagName("file");
 	  for (int i = 0; i < files.getLength() ; i++) {
 	    generateOneFile((Element)files.item(i));
     }
   }
 	
-	public void generateOneFile(Element element) throws CoreException{
+	public void generateOneFile(Element element) throws IOException, TemplateException{
 	  String name = element.getElementsByTagName("name").item(0).getTextContent();
 	  String template = element.getElementsByTagName("template").item(0).getTextContent();
     String output;
-    try {
-      String filename = generateExpresion(name);
-      fGlobal.put("filename", new SimpleScalar(filename));
-      output = generateTemplate(template);
-      fOutputs.add(new String[]{filename,output});
-    } catch (IOException e) {
+    //try {
+    String filename = generateExpresion(name);
+    fGlobal.put("filename", new SimpleScalar(filename));
+    output = generateTemplate(template);
+    fOutputs.add(new String[]{filename,output});
+    /*
+	  } catch (IOException e) {
       e.printStackTrace();
       throw new CoreException(new Status(IStatus.ERROR,Activator.PLUGIN_ID,IStatus.OK,"io problem while processing "+template +
           ":\n"+e.getMessage(),e));
@@ -109,6 +108,7 @@ public class Generator {
       throw new CoreException(new Status(IStatus.ERROR,Activator.PLUGIN_ID,IStatus.OK,"template problem while processing "+template+
           ":\n"+e.getMessage(),e));
     } 
+    */
 	}
 	
 	public String generateTemplate(String templateName) throws IOException, TemplateException{	

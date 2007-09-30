@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -44,10 +45,10 @@ public class SelectContainersPage extends WizardPage {
 		layout.numColumns = 3;
 		layout.verticalSpacing = 9;
 		
-		Label label = new Label(container, SWT.NULL);
-    label.setText("");
+		//Label label = new Label(container, SWT.NULL);
+    //label.setText("");
     
-		label = new Label(container, SWT.NULL);
+    Label label = new Label(container, SWT.NULL);
 		label.setText("&Container:");
 
 		containerText = new Text(container, SWT.BORDER | SWT.SINGLE);
@@ -62,7 +63,8 @@ public class SelectContainersPage extends WizardPage {
 		Button button = new Button(container, SWT.PUSH);
 		button.setText("Browse...");
 		button.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
+			@Override
+      public void widgetSelected(SelectionEvent e) {
 				handleBrowse();
 			}
 		});
@@ -93,7 +95,7 @@ public class SelectContainersPage extends WizardPage {
 		ContainerSelectionDialog dialog = new ContainerSelectionDialog(
 				getShell(), ResourcesPlugin.getWorkspace().getRoot(), false,
 				"Select new file container");
-		if (dialog.open() == ContainerSelectionDialog.OK) {
+		if (dialog.open() == Window.OK) {
 			Object[] result = dialog.getResult();
 			if (result.length == 1) {
 				containerText.setText(((Path) result[0]).toString());

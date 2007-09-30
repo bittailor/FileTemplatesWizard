@@ -16,5 +16,19 @@
             id="ch.bittailor.filetemplates.wizards.FileTemplatesWizard">
       </wizard>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="ch.bittailor.filetemplates.preferences.FileTemplatesPreferencePage"
+            id="ch.bittailor.filetemplates.preferences.FileTemplatesPreferencePage"
+            name="Template Generator">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="ch.bittailor.filetemplates.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
 
 </plugin>
