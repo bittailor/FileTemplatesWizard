@@ -58,6 +58,7 @@ public class FileTemplatesWizard extends Wizard implements INewWizard {
         try {
           doFinish(containerName, generator, monitor);
         } catch (CoreException e) {
+          e.printStackTrace();
           throw new InvocationTargetException(e);
         } finally {
           monitor.done();
@@ -67,8 +68,10 @@ public class FileTemplatesWizard extends Wizard implements INewWizard {
     try {
       getContainer().run(true, false, runnable);
     } catch (InterruptedException e) {
+      e.printStackTrace();
       return false;
     } catch (InvocationTargetException e) {
+      e.printStackTrace();
       Throwable realException = e.getTargetException();
       MessageDialog.openError(getShell(), "Error", realException.getMessage());
       return false;
@@ -103,6 +106,7 @@ public class FileTemplatesWizard extends Wizard implements INewWizard {
             try {
               IDE.openEditor(page, file, true);
             } catch (PartInitException e) {
+              e.printStackTrace();
             }
           }		
         }

@@ -96,6 +96,10 @@ public class Generator {
     //try {
     String filename = generateExpresion(name);
     fGlobal.put("filename", new SimpleScalar(filename));
+    String basename =  filename.substring( 0, filename.lastIndexOf("."));
+    fGlobal.put("basename", new SimpleScalar(basename));
+    
+    
     output = generateTemplate(template);
     fOutputs.add(new String[]{filename,output});
     /*
