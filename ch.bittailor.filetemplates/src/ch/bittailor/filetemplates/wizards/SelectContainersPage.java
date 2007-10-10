@@ -44,10 +44,7 @@ public class SelectContainersPage extends WizardPage {
 		container.setLayout(layout);
 		layout.numColumns = 3;
 		layout.verticalSpacing = 9;
-		
-		//Label label = new Label(container, SWT.NULL);
-    //label.setText("");
-    
+
     Label label = new Label(container, SWT.NULL);
 		label.setText("&Container:");
 

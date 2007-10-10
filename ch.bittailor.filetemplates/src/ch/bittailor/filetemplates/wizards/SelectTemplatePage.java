@@ -51,7 +51,7 @@ public class SelectTemplatePage extends WizardPage implements SelectionListener 
       Element root = document.getDocumentElement();
       fGenerators = root.getElementsByTagName("generator"); 
     } catch (Exception e) {
-      e.printStackTrace();
+      Activator.logThrowable(e);
       throw new Error("problem loading templates definition file "+Activator.FILETEMPLATES_XML,e);
     }
     

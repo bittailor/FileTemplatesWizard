@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -83,11 +85,17 @@ public class Activator extends AbstractUIPlugin {
 	  }
 	}
   
-	public String getTempaltePathPrefix(){
-	  return "templates/";
+	public static void log(int severity ,String message, Throwable throwable){
+	  Status status = new Status(severity,Activator.PLUGIN_ID,IStatus.OK,message,throwable);
+	  getDefault().getLog().log(status);
 	}
 	
-
+	public static void logThrowable(Throwable  throwable){
+	  throwable.printStackTrace();
+    Status status = new Status(IStatus.ERROR,Activator.PLUGIN_ID,IStatus.OK,throwable.getMessage(),throwable);
+    getDefault().getLog().log(status);
+  }
+	
 	/**
 	 * Returns the shared instance
 	 *
