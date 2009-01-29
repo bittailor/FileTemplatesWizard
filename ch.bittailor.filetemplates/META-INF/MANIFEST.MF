@@ -11,5 +11,4 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide,
  org.junit
 Eclipse-LazyStart: true
-Bundle-ClassPath: lib/freemarker.jar,
- .
+Bundle-ClassPath: .

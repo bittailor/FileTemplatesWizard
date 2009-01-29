@@ -20,7 +20,6 @@ public abstract class CacheModel<T> {
     return fCache.get(key);
   }
   
-  @SuppressWarnings("unused")
   public boolean isEmpty() throws TemplateModelException {
     return false;
   }
