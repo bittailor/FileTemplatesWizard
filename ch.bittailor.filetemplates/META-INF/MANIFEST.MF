@@ -10,5 +10,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.resources,
  org.eclipse.ui.ide,
  org.junit
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
+Import-Package: freemarker.core,
+ freemarker.template

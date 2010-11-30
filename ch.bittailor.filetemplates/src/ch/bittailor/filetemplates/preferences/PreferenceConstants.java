@@ -4,5 +4,5 @@ package ch.bittailor.filetemplates.preferences;
  * Constant definitions for plug-in preferences
  */
 public class PreferenceConstants {
-	public static final String P_TEMPLATES_LOCATION = "templatesLocation";
+   public static final String P_TEMPLATES_LOCATION = "templatesLocation";
 }

@@ -12,10 +12,10 @@ import ch.bittailor.filetemplates.Activator;
  */
 public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
-	@Override
-  public void initializeDefaultPreferences() {
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		store.setDefault(PreferenceConstants.P_TEMPLATES_LOCATION, System.getProperty("user.home")+File.separator+".bittailor"+File.separator+"filetemplates");
-	}
+   @Override
+   public void initializeDefaultPreferences() {
+      IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+      store.setDefault(PreferenceConstants.P_TEMPLATES_LOCATION, System.getProperty("user.home")+File.separator+".bittailor"+File.separator+"filetemplates");
+   }
 
 }

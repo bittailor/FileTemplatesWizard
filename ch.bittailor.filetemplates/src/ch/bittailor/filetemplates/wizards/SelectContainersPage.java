@@ -24,121 +24,121 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 
 public class SelectContainersPage extends WizardPage {
-	private Text containerText;
+   private Text containerText;
 
-	private ISelection selection;
-	
-	public SelectContainersPage(ISelection selection) {
-		super("wizardPage");
-		setTitle("File Template Generator");
-		setDescription("This wizard creates files with the selected template generator.");
-		this.selection = selection;
-	}
+   private ISelection selection;
 
-	/**
-	 * @see IDialogPage#createControl(Composite)
-	 */
-	public void createControl(Composite parent) {
-	   
-	  Composite container = new Composite(parent, SWT.NULL);
-		GridLayout layout = new GridLayout();
-		container.setLayout(layout);
-		layout.numColumns = 3;
-		layout.verticalSpacing = 9;
+   public SelectContainersPage(ISelection selection) {
+      super("wizardPage");
+      setTitle("File Template Generator");
+      setDescription("This wizard creates files with the selected template generator.");
+      this.selection = selection;
+   }
 
-    Label label = new Label(container, SWT.NULL);
-		label.setText("&Container:");
+   /**
+    * @see IDialogPage#createControl(Composite)
+    */
+   public void createControl(Composite parent) {
 
-		containerText = new Text(container, SWT.BORDER | SWT.SINGLE);
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		containerText.setLayoutData(gd);
-		containerText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				dialogChanged();
-			}
-		});
+      Composite container = new Composite(parent, SWT.NULL);
+      GridLayout layout = new GridLayout();
+      container.setLayout(layout);
+      layout.numColumns = 3;
+      layout.verticalSpacing = 9;
 
-		Button button = new Button(container, SWT.PUSH);
-		button.setText("Browse...");
-		button.addSelectionListener(new SelectionAdapter() {
-			@Override
-      public void widgetSelected(SelectionEvent e) {
-				handleBrowse();
-			}
-		});
-		initialize();
-		dialogChanged();
-		setControl(container);
-	}
+      Label label = new Label(container, SWT.NULL);
+      label.setText("&Container:");
 
-	private void initialize() {
-	  if (selection != null && selection.isEmpty() == false
-	      && selection instanceof IStructuredSelection) {
-	    IStructuredSelection ssel = (IStructuredSelection) selection;
-	    if (ssel.size() > 1)
-	      return;
-	    Object object = ssel.getFirstElement();
-	    IResource resource = null;
-	    if (object instanceof IResource) {
-	      resource = (IResource)object;
-	    }else{
-	      if(object instanceof IAdaptable  ){
-	        Object adapted = ((IAdaptable)object).getAdapter(IResource.class);
-	        if(adapted!=null){
-	          resource = (IResource)adapted;
-	        }
-	      }
-	    }
-	    if(resource==null){
-	      return;
-	    }   
-	    IContainer container;
-	    if (resource instanceof IContainer) {
-	      container = (IContainer) resource;
-	    }else{
-	      container = resource.getParent();
-	    }
-	    containerText.setText(container.getFullPath().toString());
-	  }
-	}
+      containerText = new Text(container, SWT.BORDER | SWT.SINGLE);
+      GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+      containerText.setLayoutData(gd);
+      containerText.addModifyListener(new ModifyListener() {
+         public void modifyText(ModifyEvent e) {
+            dialogChanged();
+         }
+      });
 
-	private void handleBrowse() {
-		ContainerSelectionDialog dialog = new ContainerSelectionDialog(
-				getShell(), ResourcesPlugin.getWorkspace().getRoot(), false,
-				"Select new file container");
-		if (dialog.open() == Window.OK) {
-			Object[] result = dialog.getResult();
-			if (result.length == 1) {
-				containerText.setText(((Path) result[0]).toString());
-			}
-		}
-	}
+      Button button = new Button(container, SWT.PUSH);
+      button.setText("Browse...");
+      button.addSelectionListener(new SelectionAdapter() {
+         @Override
+         public void widgetSelected(SelectionEvent e) {
+            handleBrowse();
+         }
+      });
+      initialize();
+      dialogChanged();
+      setControl(container);
+   }
 
-	private void dialogChanged() {
-		IResource container = ResourcesPlugin.getWorkspace().getRoot().findMember(new Path(getContainerName()));
-		if (getContainerName().length() == 0) {
-			updateStatus("File container must be specified");
-			return;
-		}
-		if (container == null
-				|| (container.getType() & (IResource.PROJECT | IResource.FOLDER)) == 0) {
-			updateStatus("File container must exist");
-			return;
-		}
-		if (!container.isAccessible()) {
-			updateStatus("Project must be writable");
-			return;
-		}
-		updateStatus(null);
-	}
+   private void initialize() {
+      if (selection != null && selection.isEmpty() == false
+               && selection instanceof IStructuredSelection) {
+         IStructuredSelection ssel = (IStructuredSelection) selection;
+         if (ssel.size() > 1)
+            return;
+         Object object = ssel.getFirstElement();
+         IResource resource = null;
+         if (object instanceof IResource) {
+            resource = (IResource)object;
+         }else{
+            if(object instanceof IAdaptable  ){
+               Object adapted = ((IAdaptable)object).getAdapter(IResource.class);
+               if(adapted!=null){
+                  resource = (IResource)adapted;
+               }
+            }
+         }
+         if(resource==null){
+            return;
+         }   
+         IContainer container;
+         if (resource instanceof IContainer) {
+            container = (IContainer) resource;
+         }else{
+            container = resource.getParent();
+         }
+         containerText.setText(container.getFullPath().toString());
+      }
+   }
 
-	private void updateStatus(String message) {
-		setErrorMessage(message);
-		setPageComplete(message == null);
-	}
+   private void handleBrowse() {
+      ContainerSelectionDialog dialog = new ContainerSelectionDialog(
+               getShell(), ResourcesPlugin.getWorkspace().getRoot(), false,
+      "Select new file container");
+      if (dialog.open() == Window.OK) {
+         Object[] result = dialog.getResult();
+         if (result.length == 1) {
+            containerText.setText(((Path) result[0]).toString());
+         }
+      }
+   }
 
-	public String getContainerName() {
-		return containerText.getText();
-	}
+   private void dialogChanged() {
+      IResource container = ResourcesPlugin.getWorkspace().getRoot().findMember(new Path(getContainerName()));
+      if (getContainerName().length() == 0) {
+         updateStatus("File container must be specified");
+         return;
+      }
+      if (container == null
+               || (container.getType() & (IResource.PROJECT | IResource.FOLDER)) == 0) {
+         updateStatus("File container must exist");
+         return;
+      }
+      if (!container.isAccessible()) {
+         updateStatus("Project must be writable");
+         return;
+      }
+      updateStatus(null);
+   }
+
+   private void updateStatus(String message) {
+      setErrorMessage(message);
+      setPageComplete(message == null);
+   }
+
+   public String getContainerName() {
+      return containerText.getText();
+   }
 
 }

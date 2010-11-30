@@ -20,25 +20,25 @@ import ch.bittailor.filetemplates.Activator;
  */
 
 public class FileTemplatesPreferencePage
-	extends FieldEditorPreferencePage
-	implements IWorkbenchPreferencePage {
+extends FieldEditorPreferencePage
+implements IWorkbenchPreferencePage {
 
-	public FileTemplatesPreferencePage() {
-		super(GRID);
-		setPreferenceStore(Activator.getDefault().getPreferenceStore());
-		setDescription("Preferences for the Template Generator");
-	}
-	
-	/**
-	 * Creates the field editors. Field editors are abstractions of
-	 * the common GUI blocks needed to manipulate various types
-	 * of preferences. Each field editor knows how to save and
-	 * restore itself.
-	 */
-	@Override
-  public void createFieldEditors() {
-		addField(new DirectoryFieldEditor(PreferenceConstants.P_TEMPLATES_LOCATION, "&Templates Location:", getFieldEditorParent()));
-		/*
+   public FileTemplatesPreferencePage() {
+      super(GRID);
+      setPreferenceStore(Activator.getDefault().getPreferenceStore());
+      setDescription("Preferences for the Template Generator");
+   }
+
+   /**
+    * Creates the field editors. Field editors are abstractions of
+    * the common GUI blocks needed to manipulate various types
+    * of preferences. Each field editor knows how to save and
+    * restore itself.
+    */
+   @Override
+   public void createFieldEditors() {
+      addField(new DirectoryFieldEditor(PreferenceConstants.P_TEMPLATES_LOCATION, "&Templates Location:", getFieldEditorParent()));
+      /*
 		addField(
 			new BooleanFieldEditor(
 				PreferenceConstants.P_BOOLEAN,
@@ -54,10 +54,10 @@ public class FileTemplatesPreferencePage
 		}, getFieldEditorParent()));
 		addField(
 			new StringFieldEditor(PreferenceConstants.P_STRING, "A &text preference:", getFieldEditorParent()));
-		*/
-	}
+       */
+   }
 
-	public void init(IWorkbench workbench) {
-	}
-	
+   public void init(IWorkbench workbench) {
+   }
+
 }

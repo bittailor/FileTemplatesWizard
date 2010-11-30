@@ -9,13 +9,13 @@ import freemarker.template.TemplateModelException;
 
 public class StringHashModel extends CacheModel<String> implements TemplateHashModel {
 
-  public TemplateModel get(String key) throws TemplateModelException {
-    return new SimpleScalar(getCached(key)) ;
-  }
+   public TemplateModel get(String key) throws TemplateModelException {
+      return new SimpleScalar(getCached(key)) ;
+   }
 
-  @Override
-  protected String ask(String key) {
-    return ServiceProvider.instance().getAskSerice().askForAString(key);
-  }
+   @Override
+   protected String ask(String key) {
+      return ServiceProvider.instance().getAskSerice().askForAString(key);
+   }
 
 }
