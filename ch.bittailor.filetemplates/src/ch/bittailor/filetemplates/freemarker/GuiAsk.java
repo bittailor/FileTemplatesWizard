@@ -1,5 +1,7 @@
 package ch.bittailor.filetemplates.freemarker;
 
+import java.util.*;
+
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
@@ -8,18 +10,20 @@ import org.eclipse.swt.widgets.Display;
 
 public class GuiAsk implements IAsk {
    
+   Map<String, String> fStringHistory = new HashMap<String, String>();
   
    public Boolean askForABoolean(String key) {       
       Display dialog = Display.getDefault();
       AskForABoolean asker = new AskForABoolean(key);
-      synchExecute(dialog, asker); 
+      synchExecute(dialog, asker);
       return asker.getAnswer();
    }
    
    public String askForAString(String key) {
       Display dialog = Display.getDefault();
-      AskForAString asker = new AskForAString(key);
-      synchExecute(dialog, asker);    
+      AskForAString asker = new AskForAString(key,fStringHistory.get(key));
+      synchExecute(dialog, asker);  
+      fStringHistory.put(key,asker.getAnswer());
       return asker.getAnswer();
    }
 
@@ -55,15 +59,24 @@ class AskForAString implements Runnable{
    
    private String fKey;
    private String fAnswer;
+   private String fHistory;
 
-   public AskForAString(String key) {
+   public AskForAString(String key, String history) {
       fKey = key;
       fAnswer = key;
+      fHistory = history;
    }
 
    public void run() {
+      String initialValue;
+      if(fHistory != null)  {
+         initialValue = fHistory; 
+      } else {
+         initialValue = fKey;
+      }
+      
       InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(),
-               "File Template Generator", "String Value For: "+GuiAsk.toReadableKey(fKey), fKey, null);
+               "File Template Generator", "String Value For: "+GuiAsk.toReadableKey(fKey), initialValue, null);
       
       int returnCode = dlg.open();
       if(returnCode == Window.CANCEL){
