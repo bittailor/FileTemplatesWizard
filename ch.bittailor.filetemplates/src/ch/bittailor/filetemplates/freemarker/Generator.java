@@ -19,14 +19,7 @@ import org.eclipse.core.runtime.Path;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import freemarker.template.Configuration;
-import freemarker.template.DefaultObjectWrapper;
-import freemarker.template.SimpleDate;
-import freemarker.template.SimpleHash;
-import freemarker.template.SimpleScalar;
-import freemarker.template.Template;
-import freemarker.template.TemplateDateModel;
-import freemarker.template.TemplateException;
+import freemarker.template.*;
 
 public class Generator {
 
@@ -67,7 +60,13 @@ public class Generator {
          fGlobal.put("project", project.getName());
       }
 
-      generateAllFiles(element);
+      try{
+         generateAllFiles(element);
+      } catch (AbortException abortException) {
+         return new LinkedList<IFile>();
+      }
+      
+      
       List<IFile> files = new LinkedList<IFile>();
       for (String[] output : fOutputs) {
          IFile file = container.getFile(new Path(output[0]));
@@ -116,7 +115,7 @@ public class Generator {
    }
 
    public String generateTemplate(String templateName) throws IOException, TemplateException{	
-      Template template = fConfiguration.getTemplate(templateName);  
+      ITemplate template = fConfiguration.getTemplate(templateName);  
       return process(template);
    }
 
@@ -126,7 +125,7 @@ public class Generator {
       return process(template);
    }
 
-   public String process(Template template) throws TemplateException, IOException {
+   public String process(ITemplate template) throws TemplateException, IOException {
       StringWriter writer = new StringWriter();
       template.process(fDataModel, writer);
       return writer.toString();

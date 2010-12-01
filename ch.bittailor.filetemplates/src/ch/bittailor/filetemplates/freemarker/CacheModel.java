@@ -1,9 +1,6 @@
 package ch.bittailor.filetemplates.freemarker;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import freemarker.template.TemplateModelException;
+import java.util.*;
 
 public abstract class CacheModel<T> {
 
@@ -20,7 +17,7 @@ public abstract class CacheModel<T> {
       return fCache.get(key);
    }
 
-   public boolean isEmpty() throws TemplateModelException {
+   public boolean isEmpty(){
       return false;
    }
 

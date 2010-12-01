@@ -3,22 +3,36 @@ package ch.bittailor.filetemplates.freemarker;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.*;
 import org.eclipse.swt.widgets.Display;
 
 public class GuiAsk implements IAsk {
-
+   
+  
    public Boolean askForABoolean(String key) {       
       Display dialog = Display.getDefault();
       AskForABoolean asker = new AskForABoolean(key);
-      dialog.syncExec(asker);    
+      synchExecute(dialog, asker); 
       return asker.getAnswer();
    }
-
+   
    public String askForAString(String key) {
       Display dialog = Display.getDefault();
       AskForAString asker = new AskForAString(key);
-      dialog.syncExec(asker);    
+      synchExecute(dialog, asker);    
       return asker.getAnswer();
+   }
+
+   private void synchExecute(Display dialog, Runnable asker) {
+      try{
+         dialog.syncExec(asker);         
+      } catch (SWTException exception) {
+         if (exception.getCause() instanceof RuntimeException) {
+            RuntimeException runtimeException = (RuntimeException) exception.getCause();
+            throw runtimeException;
+         }
+         throw exception;
+      }
    }
 
    public static String toReadableKey(String key){
@@ -38,6 +52,7 @@ public class GuiAsk implements IAsk {
 }
 
 class AskForAString implements Runnable{
+   
    private String fKey;
    private String fAnswer;
 
@@ -49,7 +64,12 @@ class AskForAString implements Runnable{
    public void run() {
       InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(),
                "File Template Generator", "String Value For: "+GuiAsk.toReadableKey(fKey), fKey, null);
-      if (dlg.open() == Window.OK) {
+      
+      int returnCode = dlg.open();
+      if(returnCode == Window.CANCEL){
+         throw new AbortException();
+      }
+      if (returnCode == Window.OK) {
          fAnswer = dlg.getValue();
       }
    }
@@ -61,6 +81,9 @@ class AskForAString implements Runnable{
 }
 
 class AskForABoolean implements Runnable{
+   
+   private static final int DIALOG_ESC = -1;
+   
    private String fKey;
    private Boolean fAnswer;
 
@@ -73,7 +96,11 @@ class AskForABoolean implements Runnable{
       MessageDialog dialog = new MessageDialog(Display.getCurrent().getActiveShell(),
                "File Template Generator", null, "Choose: "+GuiAsk.toReadableKey(fKey), 
                MessageDialog.QUESTION, new String[] { "true","false" },0); 
-      fAnswer = dialog.open() == 0;
+      int returnCode = dialog.open();
+      if(returnCode == DIALOG_ESC){
+         throw new AbortException();
+      }
+      fAnswer = returnCode == 0;
    }
 
    public Boolean getAnswer() {
