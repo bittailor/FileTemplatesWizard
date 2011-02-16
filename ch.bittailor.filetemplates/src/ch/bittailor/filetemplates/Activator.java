@@ -45,7 +45,7 @@ public class Activator extends AbstractUIPlugin {
    public void start(BundleContext context) throws Exception {
       super.start(context);
       fPlugin = this;
-      System.out.println(getPreferenceStore().getString(PreferenceConstants.P_TEMPLATES_LOCATION));
+      System.out.println(getTemplateLocation());
    }
 
    /*

@@ -115,7 +115,7 @@ public class Generator {
    }
 
    public String generateTemplate(String templateName) throws IOException, TemplateException{	
-      ITemplate template = fConfiguration.getTemplate(templateName);  
+      Template template = fConfiguration.getTemplate(templateName);  
       return process(template);
    }
 
@@ -125,7 +125,7 @@ public class Generator {
       return process(template);
    }
 
-   public String process(ITemplate template) throws TemplateException, IOException {
+   public String process(Template template) throws TemplateException, IOException {
       StringWriter writer = new StringWriter();
       template.process(fDataModel, writer);
       return writer.toString();
