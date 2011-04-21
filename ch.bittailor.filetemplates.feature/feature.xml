@@ -5,16 +5,24 @@
       version="3.0.0.qualifier"
       provider-name="bittailor.ch">
 
-   <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
+   <description>
+      A Freemarker based file template wizard for Eclipse
    </description>
 
-   <copyright url="http://www.example.com/copyright">
-      [Enter Copyright Description here.]
+   <copyright>
+      Copyright (c) 2007,2011 Franz Schnyder (bittailor.ch)
+
+Third Party:
+- freemarker.jar (http://http://freemarker.sourceforge.net)
+
+Copyright (c) 2003 The Visigoth Software Society. All rights reserved.
    </copyright>
 
-   <license url="http://www.example.com/license">
-      [Enter License Description here.]
+   <license url="http://www.opensource.org/licenses/bsl1.0.html">
+      Boost Software License - Version 1.0 - August 17th, 2003
+
+Third Party:
+- freemarker.jar see http://freemarker.sourceforge.net/docs/app_license.html
    </license>
 
    <plugin
