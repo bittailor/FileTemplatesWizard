@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: FreemarkerPluginWrapper
 Bundle-SymbolicName: ch.bittailor.freemarker.pluginwrapper;singleton:=true
-Bundle-Version: 2.3.16
+Bundle-Version: 2.3.16.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: freemarker.cache,
  freemarker.core,
@@ -13,3 +13,4 @@ Export-Package: freemarker.cache,
  freemarker.template.utility
 Bundle-ClassPath: freemarker.jar,
  .
+Bundle-Vendor: bittailor.ch
