@@ -63,7 +63,9 @@ public class Activator extends AbstractUIPlugin {
       String location = getPreferenceStore().getString(PreferenceConstants.P_TEMPLATES_LOCATION);
       File directory = new File(location);
       if(!directory.exists()) {
-         directory.mkdirs();
+         if (!directory.mkdirs()) {
+            throw new IOException("Could not create template location directory " + directory);
+         }
       }
       File xml = new File(directory,FILETEMPLATES_XML);
       if (!xml.exists()){
@@ -79,11 +81,21 @@ public class Activator extends AbstractUIPlugin {
       if(source == null){
          throw new IOException("Resource stream for "+destination.getName()+" is null");
       }
-      FileOutputStream out = new FileOutputStream(destination);
-      byte[] buffer = new byte[100];	
-      int len = 0;
-      while((len=source.read(buffer))!=-1 ){
-         out.write(buffer, 0, len);
+      FileOutputStream out = null;
+      try {
+         out = new FileOutputStream(destination);
+         byte[] buffer = new byte[100];	
+         int len = 0;
+         while ((len=source.read(buffer)) != -1 ){
+            out.write(buffer, 0, len);
+         }       
+      }finally{
+         if (out != null) {
+            try {
+               out.close();
+            } catch (IOException e) {
+            }
+         }
       }
    }
 
