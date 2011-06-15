@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -74,11 +75,26 @@ public class Generator {
          if (file.exists()) {
             file.setContents(stream, true, true, monitor);
          } else {
+            ensureFolders(file.getParent(), monitor);
             file.create(stream, true, monitor);
          }
          files.add(file);
       }
       return files;
+   }
+
+   private void ensureFolders(IContainer container, IProgressMonitor monitor) throws CoreException {
+      if (container == null) {
+         return;
+      }     
+      if (container.exists()) {
+         return;
+      }      
+      if (container instanceof IFolder) {
+         IFolder folder = (IFolder) container;
+         ensureFolders(folder.getParent(), monitor);
+         folder.create(true, true, monitor);
+      }      
    }
 
    public void generateAllFiles(Element element) throws IOException, TemplateException{
