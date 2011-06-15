@@ -2,7 +2,7 @@
 <feature
       id="ch.bittailor.filetemplates.feature"
       label="File Templates Wizard"
-      version="3.0.0.qualifier"
+      version="3.0.1.qualifier"
       provider-name="bittailor.ch">
 
    <description>
@@ -29,14 +29,14 @@ Third Party:
          id="ch.bittailor.filetemplates"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="3.0.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="ch.bittailor.freemarker.pluginwrapper"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.3.16.qualifier"
          unpack="false"/>
 
 </feature>
