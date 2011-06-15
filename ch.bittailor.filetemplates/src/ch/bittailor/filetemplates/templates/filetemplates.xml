@@ -3,25 +3,19 @@
 	<generator name="C++ Class">
 		<description>Generator für eine C++ Klasse</description>
 		<file>
-			<name>&lt;#if boolean.withNamespace &gt;${string.namespace?replace('::','_')}_&lt;#elseif boolean.withPrefix &gt;${string.prefix}_&lt;/#if&gt;${string.class}.hpp</name>
+			<name>&lt;#if boolean.withNamespace &gt;${string.namespace?replace('::','/')}/&lt;#elseif boolean.withPrefix &gt;${string.prefix}_&lt;/#if&gt;${string.class}.hpp</name>
 			<template>class.hpp.ftl</template>
 		</file>
 		<file>
-			<name>&lt;#if boolean.withNamespace &gt;${string.namespace?replace('::','_')}_&lt;#elseif boolean.withPrefix &gt;${string.prefix}_&lt;/#if&gt;${string.class}.cpp</name>
+			<name>&lt;#if boolean.withNamespace &gt;${string.namespace?replace('::','/')}/&lt;#elseif boolean.withPrefix &gt;${string.prefix}_&lt;/#if&gt;${string.class}.cpp</name>
 			<template>class.cpp.ftl</template>
 		</file>		
 	</generator>
-	<generator name="C++ Source File">
+	<generator name="C++ Interface">
 		<description>Generator für ein C++ Source File</description>
 		<file>
-			<name>${string.class}.cpp</name>
-			<template>class.cpp.ftl</template>
-		</file>
-	</generator>
-	<generator name="C++ Header File">
-		<file>
-			<name>${string.class}.hpp</name>
-			<template>class.hpp.ftl</template>
+			<name>&lt;#if boolean.withNamespace &gt;${string.namespace?replace('::','/')}/&lt;#elseif boolean.withPrefix &gt;${string.prefix}_&lt;/#if&gt;${string.class}.hpp</name>
+			<template>interface.hpp.ftl</template>
 		</file>
 	</generator>
 </filetemplates>

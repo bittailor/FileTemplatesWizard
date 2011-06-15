@@ -28,6 +28,7 @@ public class Activator extends AbstractUIPlugin {
    public static final String FILETEMPLATES_XML = "filetemplates.xml";
    public static final String CLASS_HPP = "class.hpp.ftl";
    public static final String CLASS_CPP = "class.cpp.ftl";
+   public static final String INTERFACE_HPP = "interface.hpp.ftl";
 
 
 
@@ -69,6 +70,7 @@ public class Activator extends AbstractUIPlugin {
          copy(getClass().getResourceAsStream("templates/"+FILETEMPLATES_XML),xml);
          copy(getClass().getResourceAsStream("templates/"+CLASS_HPP),new File(directory,CLASS_HPP));
          copy(getClass().getResourceAsStream("templates/"+CLASS_CPP),new File(directory,CLASS_CPP));
+         copy(getClass().getResourceAsStream("templates/"+INTERFACE_HPP),new File(directory,INTERFACE_HPP));
       }
       return location;
    }
